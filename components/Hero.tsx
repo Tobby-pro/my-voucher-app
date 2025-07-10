@@ -58,7 +58,7 @@ export default function Hero() {
         <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-100 to-white drop-shadow-md">
           <CountUp
             start={0}
-            end={1823}
+            end={847}
             duration={3}
             separator=","
             suffix="+"
