@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TechBridge - IT Vouchers & Exams",
+  title: "Btonenet - IT Vouchers & Exams",
   description:
     "Affordable IT exam voucher purchases, certification bookings, software and tech training, both in Naira & Dollar.",
 };
