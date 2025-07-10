@@ -30,7 +30,6 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-gray-300">
             <li><a href="#vouchers" className="hover:text-white">Vouchers</a></li>
             <li><a href="#training" className="hover:text-white">Training</a></li>
-            <li><a href="#about" className="hover:text-white">About</a></li>
             <li><a href="#contact" className="hover:text-white">Contact</a></li>
           </ul>
         </div>
@@ -40,7 +39,7 @@ export default function Footer() {
           <h3 className="text-lg font-semibold mb-3">Contact</h3>
           <ul className="space-y-2 text-sm text-gray-300">
             <li>Email: <a href="mailto:support@btonenet.com" className="hover:text-white">support@btonenet.com</a></li>
-            <li>Phone: +234 000 000 0000</li>
+            <li>Phone: +234 705 187 5238</li>
             <li>Location: Lagos, Nigeria</li>
           </ul>
         </div>
