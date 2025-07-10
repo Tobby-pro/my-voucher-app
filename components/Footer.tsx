@@ -51,7 +51,7 @@ export default function Footer() {
             <a href="#" className="hover:text-white"><FaFacebookF /></a>
             <a href="#" className="hover:text-white"><FaTwitter /></a>
             <a href="#" className="hover:text-white"><FaInstagram /></a>
-            {/* <a href="#" className="hover:text-white"><FaLinkedin /></a> */}
+            <a href="#" className="hover:text-white"><FaLinkedin /></a>
           </div>
         </div>
       </div>
