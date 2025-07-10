@@ -1,6 +1,7 @@
 import CertificationsGrid from "@/components/CertificationsGrid";
 import FaqSection from "@/components/FacSection";
 import FeaturesSection from "@/components/FeaturesSection";
+import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import VoucherForm from "@/components/VoucherForm";
@@ -17,7 +18,9 @@ export default function Home() {
         <VoucherForm />
         <FaqSection />
       </section>
-    
+    <footer>
+      <Footer/>
+    </footer>
     </main>
   );
 }
