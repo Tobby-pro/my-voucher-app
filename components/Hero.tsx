@@ -94,28 +94,17 @@ export default function Hero() {
         </a>
       </motion.div>
 
-      {/* 🎯 Floating Counter - Responsive Positioning */}
+      {/* 🎯 Centered Counter */}
       <motion.div
-        className="z-30 mt-6 sm:mt-0 sm:absolute 
-                   left-1/2 -translate-x-1/2 
-                   sm:left-10 sm:translate-x-0 
-                   sm:top-[60%] 
-                   bg-white/5 backdrop-blur-md px-6 py-4 
-                   rounded-2xl border border-white/20 shadow-2xl"
+        className="relative z-30 mt-12 bg-white/10 backdrop-blur-md px-8 py-6 rounded-2xl border border-white/20 shadow-2xl flex flex-col items-center justify-center max-w-xs mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.6 }}
       >
-        <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white drop-shadow-md">
-          <CountUp
-            start={0}
-            end={847}
-            duration={3}
-            separator=","
-            suffix="+"
-          />
+        <p className="text-5xl sm:text-6xl font-extrabold text-white drop-shadow-md">
+          <CountUp start={0} end={847} duration={3} separator="," suffix="+" />
         </p>
-        <p className="text-sm sm:text-base text-white/80 mt-1 font-medium">
+        <p className="text-base sm:text-lg text-white/80 mt-2 font-medium">
           Vouchers Purchased
         </p>
       </motion.div>
