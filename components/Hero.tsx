@@ -27,7 +27,7 @@ const imageFade: Variants = {
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 sm:px-12 md:px-20 text-center bg-gradient-to-br from-black via-gray-900 to-gray-950 text-white overflow-hidden">
-      
+
       {/* 🌆 Background Image */}
       <motion.div
         className="absolute inset-0 z-0"
@@ -48,27 +48,6 @@ export default function Hero() {
       {/* 🔲 Overlay */}
       <div className="absolute inset-0 z-10 bg-black opacity-20" />
 
-      {/* 💥 Sleek Counter (bottom-right) */}
-      <motion.div
-        className="absolute bottom-16 right-10 z-20 bg-white/5 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/20 shadow-2xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1 }}
-      >
-        <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-100 to-white drop-shadow-md">
-          <CountUp
-            start={0}
-            end={847}
-            duration={3}
-            separator=","
-            suffix="+"
-          />{" "}
-        </p>
-        <p className="text-sm sm:text-base text-white/80 mt-1 font-medium">
-          Vouchers Purchased
-        </p>
-      </motion.div>
-
       {/* ✨ Heading */}
       <motion.h1
         variants={fadeUp}
@@ -77,8 +56,8 @@ export default function Hero() {
         transition={{ delay: 0.3 }}
         className="relative z-20 text-3xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-tight leading-tight"
       >
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 to-white drop-shadow-md">
-          Affordable IT Exam Booking & Voucher Platform
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-300 to-white drop-shadow-md">
+          Affordable IT Exam Discount Voucher Platform
         </span>
       </motion.h1>
 
@@ -88,18 +67,18 @@ export default function Hero() {
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.8 }}
-        className="relative z-20 text-lg sm:text-xl max-w-xl mb-8 text-gray-300"
+        className="relative z-20 text-lg sm:text-xl max-w-xl text-gray-300 mb-8"
       >
         Pay in Naira or Dollar. Book Exams. Access Discounts. Get Certified.
       </motion.p>
 
-      {/* 🎯 CTA Buttons */}
+      {/* 🚀 CTA Buttons */}
       <motion.div
         variants={fadeUp}
         initial="hidden"
         animate="visible"
         transition={{ delay: 1.3 }}
-        className="relative z-20 flex flex-col sm:flex-row gap-4"
+        className="relative z-20 mt-8 flex flex-col sm:flex-row gap-4"
       >
         <a
           href="#voucher-form"
@@ -113,6 +92,32 @@ export default function Hero() {
         >
           Explore Training
         </a>
+      </motion.div>
+
+      {/* 🎯 Floating Counter - Responsive Positioning */}
+      <motion.div
+        className="z-30 mt-6 sm:mt-0 sm:absolute 
+                   left-1/2 -translate-x-1/2 
+                   sm:left-10 sm:translate-x-0 
+                   sm:top-[60%] 
+                   bg-white/5 backdrop-blur-md px-6 py-4 
+                   rounded-2xl border border-white/20 shadow-2xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.6 }}
+      >
+        <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white drop-shadow-md">
+          <CountUp
+            start={0}
+            end={847}
+            duration={3}
+            separator=","
+            suffix="+"
+          />
+        </p>
+        <p className="text-sm sm:text-base text-white/80 mt-1 font-medium">
+          Vouchers Purchased
+        </p>
       </motion.div>
     </section>
   );

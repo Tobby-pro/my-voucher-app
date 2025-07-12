@@ -17,7 +17,7 @@ const faqs = [
   {
     question: "How long does it take to get my voucher?",
     answer:
-      "Once payment is confirmed, your voucher is delivered to your email within minutes.",
+      "Once payment is confirmed, your voucher is delivered to your email within an hour.",
   },
   {
     question: "What vendors are supported?",
