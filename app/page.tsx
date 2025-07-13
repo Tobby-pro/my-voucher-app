@@ -11,8 +11,8 @@ export default function Home() {
     <main>
       <Navbar/>
       <Hero />
-      <CertificationsGrid /> 
       <FeaturesSection/>
+      <CertificationsGrid /> 
 
       <section id="voucher-form">
         <VoucherForm />

@@ -8,9 +8,9 @@ import axios from "axios";
 // Define the shape of vendor coming from backend
 interface VendorResponse {
   vendor: string;
+  icon: string;
 }
 
-// Define the frontend version you use to render
 interface Vendor {
   name: string;
   icon: string;
@@ -26,12 +26,14 @@ export default function CertificationsGrid() {
       try {
         const res = await axios.get<VendorResponse[]>(`${apiUrl}/vendors`);
 
-        const vendorNames = [...new Set(res.data.map((v) => v.vendor))];
-
-        const formatted: Vendor[] = vendorNames.map((v) => ({
-          name: v,
-          icon: `/vendors/${v.toLowerCase().replace(/[^a-z0-9]/gi, "")}.svg`,
-        }));
+        const formatted: Vendor[] = res.data.map((v) => {
+          const iconPath = v.icon ? `/vendors/${v.icon}` : "/vendors/default.svg";
+          console.log(`Vendor: ${v.vendor}, Icon: ${iconPath}`);
+          return {
+            name: v.vendor,
+            icon: iconPath,
+          };
+        });
 
         setVendors(formatted);
       } catch (err) {
@@ -60,7 +62,7 @@ export default function CertificationsGrid() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 * i }}
-            className="bg-gradient-to-br from-white to-amber-500 text-black p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 flex flex-col items-center"
+            className="bg-gradient-to-br from-white to-amber-600 text-black p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 flex flex-col items-center"
           >
             <div className="relative w-full h-12 sm:h-16">
               <Image

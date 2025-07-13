@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+// Import your shared components
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -15,7 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Btonenet - IT Vouchers & Exams",
   description:
-    "Affordable IT exam voucher purchases, certification bookings, software and tech training, both in Naira & Dollar.",
+    "Affordable IT exam Discount voucher purchases, certification bookings, software and tech training, both in Naira & Dollar.",
 };
 
 export default function RootLayout({
@@ -28,7 +32,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground transition-colors duration-300`}
       >
-        {children}
+        {/* ✅ Shared Navbar */}
+        <Navbar />
+
+        {/* ✅ Page-specific content */}
+        <main className="pt-16">{children}</main>
+
+        {/* ✅ Shared Footer */}
+        <Footer />
       </body>
     </html>
   );
