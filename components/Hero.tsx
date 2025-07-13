@@ -46,7 +46,7 @@ export default function Hero() {
       </motion.div>
 
       {/* 🔲 Overlay */}
-      <div className="absolute inset-0 z-10 bg-black opacity-20" />
+      <div className="absolute inset-0 z-10 bg-black opacity-30" />
 
       {/* ✨ Heading */}
       <motion.h1
@@ -54,7 +54,7 @@ export default function Hero() {
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.3 }}
-        className="relative z-20 text-3xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-tight leading-tight"
+        className="relative z-20 text-3xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-tight leading-tight "
       >
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-300 to-white drop-shadow-md">
           Affordable IT Exam Discount Voucher Platform
@@ -96,7 +96,7 @@ export default function Hero() {
 
       {/* 🎯 Centered Counter */}
       <motion.div
-        className="relative z-30 mt-12 bg-white/10 backdrop-blur-md px-8 py-6 rounded-2xl border border-white/20 shadow-2xl flex flex-col items-center justify-center max-w-xs mx-auto"
+        className="relative z-30 mt-12 bg-amber-600 backdrop-blur-md px-8 py-6 rounded-2xl border border-white/20 shadow-2xl flex flex-col items-center justify-center max-w-xs mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.6 }}

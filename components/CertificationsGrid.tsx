@@ -60,7 +60,7 @@ export default function CertificationsGrid() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 * i }}
-            className="bg-gradient-to-br from-white via-amber-200 to-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 flex flex-col items-center"
+            className="bg-gradient-to-br from-white to-amber-500 text-black p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 flex flex-col items-center"
           >
             <div className="relative w-full h-12 sm:h-16">
               <Image

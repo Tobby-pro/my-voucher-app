@@ -291,7 +291,7 @@ export default function VoucherForm() {
                 className={`w-full py-3 rounded text-black font-semibold transition-all ${
                   isSubmitting
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-br from-white via-amber-200 to-white hover:brightness-110"
+                    : "bg-gradient-to-br from-amber-200 to-amber-500 hover:brightness-110"
                 }`}
               >
                 {isSubmitting ? "Processing..." : "Buy Voucher"}
