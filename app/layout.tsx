@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Btonenet - IT Vouchers & Exams",
+  title: "Btonenet - IT Discount Vouchers & Exams",
   description:
-    "Affordable IT exam Discount voucher purchases, certification bookings, software and tech training, both in Naira & Dollar.",
+    "Affordable IT Exam Discount Voucher Purchases, Certification Bookings, & IT tech training,.",
 };
 
 export default function RootLayout({

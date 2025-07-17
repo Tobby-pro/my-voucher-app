@@ -14,11 +14,11 @@ export default function AboutPage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-4xl sm:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-300 to-white"
+          className=" pb-2 text-4xl sm:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-300 to-white"
         >
-          Empowering IT Careers Through Certification
+          Empowering IT Careers Through Professional Certifications
         </motion.h1>
-        <p className="text-white/80 max-w-2xl mx-auto">
+        <p className="text-white/80 max-w-2xl mx-auto ">
           At Btonenet, we simplify how individuals and organizations access IT vouchers, expert training, and trusted career paths.
         </p>
       </section>
@@ -30,6 +30,12 @@ export default function AboutPage() {
           Btonenet started with a vision: to bridge the gap between ambition and opportunity. 
           In a world flooded with resources, we realized what people really need is clarity, access, and support. 
           Since our founding, we’ve helped aspiring professionals gain the certifications and skills needed to thrive in the tech industry.
+          BtoneNet Services is a general merchandise company that expand its service to Information Technology training and a provider of IT 
+          exam (E.g., AWS, MICROSOFT, COMPTIA, CISCO etc.) discount voucher to allow corporate and non-corporate individual to register their exam without undergo any stress at the comfort of their home or office. We can also help them to register and book the exam as well at 
+          low cost. It is scalable, fast and all our voucher comes with 5% to 10% discount compare to the actual exam price this make it affordable to individual. We accept both Naira and Dollar payment. BtoneNet services is loyal
+           and treat every customer with respect and dignity. All our vouchers have 12months validity period and once it is purchased cannot be returned.<br/><br/>
+            NOTE: Naira payment depend on current parallel market(aboki express) exchange rate.
+
         </p>
       </section>
 
