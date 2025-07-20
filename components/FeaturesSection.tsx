@@ -18,7 +18,7 @@ const fadeInUpVariants: Variants = {
 export default function FeaturesSection() {
   const features = [
     {
-      title: "🎓 Book Exams",
+      title: "🎓 Register Exams",
       description: "Easily schedule top certification exams.",
     },
     {
@@ -48,7 +48,7 @@ export default function FeaturesSection() {
         transition={{ delay: 0.4 }}
         className="max-w-2xl mx-auto text-gray-300 mb-12"
       >
-        Btonenet helps you book IT exams, buy discounted vouchers, and get trained — all in one platform.
+        Btonenet helps you register IT exams, buy discounted vouchers, and get trained — all in one platform.
       </motion.p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

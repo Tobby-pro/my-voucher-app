@@ -9,6 +9,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast, { Toaster } from "react-hot-toast";
 
+// ✅ Voucher prop type
+interface Voucher {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+}
+
 const voucherSchema = z.object({
   vendor: z.string().min(1, "Vendor is required"),
   exam: z.string().min(1, "Exam is required"),
@@ -22,9 +30,13 @@ type ExamOptions = Record<string, string[]>;
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-export default function VoucherForm() {
+interface Props {
+  voucher?: Voucher | null;
+}
+
+export default function VoucherForm({ voucher = null }: Props) {
   const [examOptions, setExamOptions] = useState<ExamOptions>({});
-  const [basePrice, setBasePrice] = useState<number | null>(null);
+  const [basePrice, setBasePrice] = useState<number | null>(voucher?.price ?? null);
   const [exchangeRate, setExchangeRate] = useState<number>(1);
   const [showModal, setShowModal] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,21 +75,26 @@ export default function VoucherForm() {
   }, []);
 
   useEffect(() => {
-    if (!exam) return;
+    if (!exam || voucher) return; // ✅ Skip if a voucher was passed in
     axios
-      .get(`${apiUrl}/voucher-order/voucher-price`, {
-        params: { exam },
-      })
+      .get(`${apiUrl}/voucher-order/voucher-price`, { params: { exam } })
       .then((res) => setBasePrice(res.data.price))
       .catch(() => {
         setBasePrice(null);
         toast.error("❌ Failed to fetch voucher price");
       });
-  }, [exam]);
+  }, [exam, voucher]);
 
   useEffect(() => {
     setExchangeRate(currency === "NGN" ? 1600 : 1);
   }, [currency]);
+
+  useEffect(() => {
+    if (voucher) {
+      setValue("vendor", voucher.name); // optional logic
+      setValue("exam", voucher.name);
+    }
+  }, [voucher, setValue]);
 
   useEffect(() => {
     if (showModal) {
@@ -106,13 +123,11 @@ export default function VoucherForm() {
       toast.success("✅ Order received! Redirecting to payment...");
       reset();
 
-      // 🔁 Redirect to Paystack payment page
       const payUrl = `${apiUrl}/paystack-initiate?orderId=${order.id}`;
       setTimeout(() => {
         window.location.href = payUrl;
       }, 1500);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch {
       toast.error("❌ Failed to submit form");
     } finally {
       setIsSubmitting(false);
@@ -260,10 +275,7 @@ export default function VoucherForm() {
                     💰 Total:{" "}
                     {new Intl.NumberFormat(
                       currency === "NGN" ? "en-NG" : "en-US",
-                      {
-                        style: "currency",
-                        currency,
-                      }
+                      { style: "currency", currency }
                     ).format(totalAmount || 0)}
                   </span>
                 )}

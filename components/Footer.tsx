@@ -20,7 +20,7 @@ export default function Footer() {
             <h2 className="text-xl font-semibold">Btonenet</h2>
           </div>
           <p className="text-sm text-gray-400 leading-relaxed">
-            A modern platform to book IT certification exams, buy vouchers, and get trained — all in one place.
+            A modern platform to Register IT certification exams, buy vouchers, and get trained — all in one place.
           </p>
         </div>
 

@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { Search } from "lucide-react"; // Optional: for icon
+import { Search } from "lucide-react";
+import Modal from "@/components/Modal";
+import VoucherForm from "@/components/VoucherForm";
 
 interface Voucher {
   id: string;
@@ -25,6 +27,7 @@ export default function VoucherPage() {
   const [data, setData] = useState<VendorGroup[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
 
   useEffect(() => {
     const fetchVouchers = async () => {
@@ -64,7 +67,7 @@ export default function VoucherPage() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search certifications..."
-            className="w-full px-12 py-3 bg-transparent/70 backdrop-blur border border-amber-300 rounded-full shadow-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-amber-400 transition-all"
+            className="w-full px-12 py-3 bg-transparent/70 backdrop-blur border border-amber-300 rounded-full shadow-md text-gray-800 placeholder-gray-500 focus:outline-none transition-all"
           />
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-500" size={20} />
         </div>
@@ -105,9 +108,15 @@ export default function VoucherPage() {
 
                 <div className="mt-4 flex items-center justify-between">
                   <p className="text-amber-700 font-bold">
-                    {voucher.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+                    {voucher.price.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })}
                   </p>
-                  <button className="cursor-pointer px-3 py-1 bg-amber-600 text-white text-sm rounded-lg hover:bg-amber-700 transition-all">
+                  <button
+                    className="cursor-pointer px-3 py-1 bg-amber-600 text-white text-sm rounded-lg hover:bg-amber-700 transition-all"
+                    onClick={() => setSelectedVoucher(voucher)}
+                  >
                     Get Voucher
                   </button>
                 </div>
@@ -116,6 +125,11 @@ export default function VoucherPage() {
           </div>
         </section>
       ))}
+
+      {/* 🧾 Modal with Voucher Form */}
+      <Modal isOpen={!!selectedVoucher} onClose={() => setSelectedVoucher(null)}>
+        <VoucherForm voucher={selectedVoucher} />
+      </Modal>
     </div>
   );
 }
