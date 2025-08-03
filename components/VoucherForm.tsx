@@ -67,17 +67,20 @@ export default function VoucherForm({ voucher = null }: Props) {
   const currency = watch("currency");
   const quantity = parseInt(watch("quantity") || "1", 10);
 
-  useEffect(() => {
+ useEffect(() => {
     axios
-      .get(`${apiUrl}/vendors-with-exams`)
+      .get(`${apiUrl}/vendors-with-exams`, { withCredentials: true })
       .then((res) => setExamOptions(res.data))
       .catch(() => toast.error("❌ Failed to fetch vendor exams"));
   }, []);
-
+  
   useEffect(() => {
-    if (!exam || voucher) return; // ✅ Skip if a voucher was passed in
+    if (!exam || voucher) return;
     axios
-      .get(`${apiUrl}/voucher-order/voucher-price`, { params: { exam } })
+      .get(`${apiUrl}/voucher-order/voucher-price`, {
+        params: { exam },
+        withCredentials: true,
+      })
       .then((res) => setBasePrice(res.data.price))
       .catch(() => {
         setBasePrice(null);
@@ -85,18 +88,19 @@ export default function VoucherForm({ voucher = null }: Props) {
       });
   }, [exam, voucher]);
 
-  useEffect(() => {
+ useEffect(() => {
     setExchangeRate(currency === "NGN" ? 1600 : 1);
   }, [currency]);
 
   useEffect(() => {
     if (voucher) {
-      setValue("vendor", voucher.name); // optional logic
+      setValue("vendor", voucher.name);
       setValue("exam", voucher.name);
     }
   }, [voucher, setValue]);
 
-  useEffect(() => {
+
+ useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => {
         setShowModal(false);
@@ -109,13 +113,17 @@ export default function VoucherForm({ voucher = null }: Props) {
   const totalAmount =
     convertedPrice !== null ? convertedPrice * quantity : null;
 
-  const onSubmit = async (data: VoucherFormValues) => {
+const onSubmit = async (data: VoucherFormValues) => {
     setIsSubmitting(true);
     try {
-      const response = await axios.post(`${apiUrl}/voucher-order`, {
-        ...data,
-        quantity: parseInt(data.quantity, 10),
-      });
+      const response = await axios.post(
+        `${apiUrl}/voucher-order`,
+        {
+          ...data,
+          quantity: parseInt(data.quantity, 10),
+        },
+        { withCredentials: true }
+      );
 
       const order = response.data.data;
       setOrderDetails(order);

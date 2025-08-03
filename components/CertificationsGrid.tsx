@@ -24,7 +24,9 @@ export default function CertificationsGrid() {
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const res = await axios.get<VendorResponse[]>(`${apiUrl}/vendors`);
+        const res = await axios.get<VendorResponse[]>(`${apiUrl}/vendors`, {
+         withCredentials: true,
+});
 
         const formatted: Vendor[] = res.data.map((v) => {
           const iconPath = v.icon ? `/vendors/${v.icon}` : "/vendors/default.svg";
