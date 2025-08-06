@@ -36,9 +36,13 @@ export default function VoucherPage() {
     const fetchVouchers = async () => {
       try {
         const response = await axios.get<VendorGroup[]>(`${apiUrl}/vendors-with-vouchers`);
-        setData(response.data);
-        if (response.data.length > 0) {
-          setActiveVendor(response.data[0].vendor); // Set default vendor
+        const formatted = response.data.map((group) => ({
+          ...group,
+          icon: group.icon ? `/vendors/${group.icon}` : "/vendors/default.svg",
+        }));
+        setData(formatted);
+        if (formatted.length > 0) {
+          setActiveVendor(formatted[0].vendor);
         }
       } catch (error) {
         console.error("Failed to fetch vouchers:", error);
@@ -105,7 +109,7 @@ export default function VoucherPage() {
               }`}
             >
               <Image
-                src={`/logos/${group.icon}`}
+                src={group.icon}
                 alt={group.vendor}
                 width={20}
                 height={20}
@@ -117,10 +121,10 @@ export default function VoucherPage() {
         </div>
 
         {/* Vendor Title */}
-        {activeVendor && (
+        {activeVendor && selectedGroup && (
           <div className="flex items-center justify-center gap-4 mt-8 mb-4">
             <Image
-              src={`/logos/${selectedGroup?.icon}`}
+              src={selectedGroup.icon}
               alt={activeVendor}
               width={40}
               height={40}
