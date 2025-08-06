@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-20 sm:px-12 md:px-24">
+    <main className="min-h-screen bg-gradient-to-tr from-[#0f2027] via-[#203a43] to-[#2c5364] text-white px-6 py-20 sm:px-12 md:px-24">
       {/* Hero */}
       <section className="text-center mb-16">
         <motion.h1

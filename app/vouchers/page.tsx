@@ -13,6 +13,7 @@ interface Voucher {
   name: string;
   price: number;
   description: string;
+  vendor: string;
 }
 
 interface VendorGroup {
@@ -28,12 +29,17 @@ export default function VoucherPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [activeVendor, setActiveVendor] = useState<string>("");
 
   useEffect(() => {
     const fetchVouchers = async () => {
       try {
         const response = await axios.get<VendorGroup[]>(`${apiUrl}/vendors-with-vouchers`);
         setData(response.data);
+        if (response.data.length > 0) {
+          setActiveVendor(response.data[0].vendor); // Set default vendor
+        }
       } catch (error) {
         console.error("Failed to fetch vouchers:", error);
       } finally {
@@ -44,56 +50,92 @@ export default function VoucherPage() {
     fetchVouchers();
   }, []);
 
-  const filteredData = data
-    .map((group) => ({
-      ...group,
-      vouchers: group.vouchers.filter((voucher) =>
-        `${voucher.name} ${group.vendor}`.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
-    }))
-    .filter((group) => group.vouchers.length > 0);
+  const handleVoucherClick = (voucher: Voucher, vendor: string) => {
+    setSelectedVoucher({ ...voucher, vendor });
+    setShowModal(true);
+  };
+
+  const selectedGroup = data.find((group) => group.vendor === activeVendor);
+
+  const filteredVouchers = selectedGroup
+    ? selectedGroup.vouchers.filter((voucher) =>
+        `${voucher.name} ${selectedGroup.vendor}`.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
   if (loading) {
-    return <div className="text-center p-10 text-amber-500">Loading vouchers...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#0f2027] via-[#203a43] to-[#2c5364]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-dashed rounded-full animate-spin border-amber-500"></div>
+          <p className="text-amber-300 text-lg font-medium">Fetching vouchers...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4 space-y-12">
-      {/* 🔍 Search Input */}
-      <div className="sticky top-0 z-10 bg-transparent backdrop-blur py-6">
-        <div className="relative w-full max-w-xl mx-auto">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search certifications..."
-            className="w-full px-12 py-3 bg-transparent/70 backdrop-blur border border-amber-300 rounded-full shadow-md text-gray-800 placeholder-gray-500 focus:outline-none transition-all"
-          />
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-500" size={20} />
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-tr from-[#0f2027] via-[#203a43] to-[#2c5364] text-white">
+      <div className="max-w-6xl mx-auto p-4 space-y-12">
 
-      {/* 💳 Voucher Groups */}
-      {filteredData.map((group) => (
-        <section key={group.vendor}>
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-4 mb-4"
-          >
+        {/* Search Input */}
+        <div className="sticky top-0 z-10 bg-transparent backdrop-blur py-6">
+          <div className="relative w-full max-w-xl mx-auto">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search certifications..."
+              className="w-full px-12 py-3 bg-transparent/70 backdrop-blur border border-amber-300 rounded-full shadow-md text-white placeholder-gray-300 focus:outline-none transition-all"
+            />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400" size={20} />
+          </div>
+        </div>
+
+        {/* Vendor Selector */}
+        <div className="flex flex-wrap justify-center gap-4 mt-4">
+          {data.map((group) => (
+            <button
+              key={group.vendor}
+              onClick={() => setActiveVendor(group.vendor)}
+              className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium border-2 transition-all duration-300 ${
+                activeVendor === group.vendor
+                  ? "bg-amber-400 text-black border-transparent shadow-lg"
+                  : "bg-transparent text-amber-300 border-amber-300 hover:bg-amber-400 hover:text-black"
+              }`}
+            >
+              <Image
+                src={`/logos/${group.icon}`}
+                alt={group.vendor}
+                width={20}
+                height={20}
+                className="object-contain"
+              />
+              {group.vendor}
+            </button>
+          ))}
+        </div>
+
+        {/* Vendor Title */}
+        {activeVendor && (
+          <div className="flex items-center justify-center gap-4 mt-8 mb-4">
             <Image
-              src={`/logos/${group.icon}`}
-              alt={group.vendor}
+              src={`/logos/${selectedGroup?.icon}`}
+              alt={activeVendor}
               width={40}
               height={40}
               className="rounded-md object-contain"
             />
-            <h2 className="text-2xl font-bold text-white">{group.vendor} Certifications</h2>
-          </motion.div>
+            <h2 className="text-2xl font-bold text-white">{activeVendor} Certifications</h2>
+          </div>
+        )}
 
+        {/* Voucher Cards */}
+        {filteredVouchers.length === 0 ? (
+          <p className="text-center text-amber-200">No vouchers available for {activeVendor}</p>
+        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {group.vouchers.map((voucher) => (
+            {filteredVouchers.map((voucher) => (
               <motion.div
                 key={voucher.id}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -105,7 +147,6 @@ export default function VoucherPage() {
                   <h3 className="text-lg font-semibold text-gray-900">{voucher.name}</h3>
                   <p className="text-sm text-gray-700 my-2 line-clamp-3">{voucher.description}</p>
                 </div>
-
                 <div className="mt-4 flex items-center justify-between">
                   <p className="text-amber-700 font-bold">
                     {voucher.price.toLocaleString("en-US", {
@@ -115,7 +156,7 @@ export default function VoucherPage() {
                   </p>
                   <button
                     className="cursor-pointer px-3 py-1 bg-amber-600 text-white text-sm rounded-lg hover:bg-amber-700 transition-all"
-                    onClick={() => setSelectedVoucher(voucher)}
+                    onClick={() => handleVoucherClick(voucher, activeVendor)}
                   >
                     Get Voucher
                   </button>
@@ -123,13 +164,15 @@ export default function VoucherPage() {
               </motion.div>
             ))}
           </div>
-        </section>
-      ))}
+        )}
 
-      {/* 🧾 Modal with Voucher Form */}
-      <Modal isOpen={!!selectedVoucher} onClose={() => setSelectedVoucher(null)}>
-        <VoucherForm voucher={selectedVoucher} />
-      </Modal>
+        {/* Modal */}
+        {showModal && selectedVoucher && (
+          <Modal isOpen={true} onClose={() => setShowModal(false)}>
+            <VoucherForm voucher={selectedVoucher} />
+          </Modal>
+        )}
+      </div>
     </div>
   );
 }

@@ -9,12 +9,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast, { Toaster } from "react-hot-toast";
 
-// ✅ Voucher prop type
+// ✅ Voucher prop type (updated to include vendor)
 interface Voucher {
   id: string;
   name: string;
   price: number;
   description: string;
+  vendor: string;
 }
 
 const voucherSchema = z.object({
@@ -67,13 +68,13 @@ export default function VoucherForm({ voucher = null }: Props) {
   const currency = watch("currency");
   const quantity = parseInt(watch("quantity") || "1", 10);
 
- useEffect(() => {
+  useEffect(() => {
     axios
       .get(`${apiUrl}/vendors-with-exams`, { withCredentials: true })
       .then((res) => setExamOptions(res.data))
       .catch(() => toast.error("❌ Failed to fetch vendor exams"));
   }, []);
-  
+
   useEffect(() => {
     if (!exam || voucher) return;
     axios
@@ -88,19 +89,20 @@ export default function VoucherForm({ voucher = null }: Props) {
       });
   }, [exam, voucher]);
 
- useEffect(() => {
-    setExchangeRate(currency === "NGN" ? 1600 : 1);
+  useEffect(() => {
+    setExchangeRate(currency === "NGN" ? 1520 : 1);
   }, [currency]);
 
+  // ✅ Updated: auto-fill both vendor and exam from the passed voucher
   useEffect(() => {
     if (voucher) {
-      setValue("vendor", voucher.name);
+      setValue("vendor", voucher.vendor);
       setValue("exam", voucher.name);
+      setBasePrice(voucher.price);
     }
   }, [voucher, setValue]);
 
-
- useEffect(() => {
+  useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => {
         setShowModal(false);
@@ -110,10 +112,9 @@ export default function VoucherForm({ voucher = null }: Props) {
   }, [showModal]);
 
   const convertedPrice = basePrice !== null ? basePrice * exchangeRate : null;
-  const totalAmount =
-    convertedPrice !== null ? convertedPrice * quantity : null;
+  const totalAmount = convertedPrice !== null ? convertedPrice * quantity : null;
 
-const onSubmit = async (data: VoucherFormValues) => {
+  const onSubmit = async (data: VoucherFormValues) => {
     setIsSubmitting(true);
     try {
       const response = await axios.post(
@@ -145,8 +146,6 @@ const onSubmit = async (data: VoucherFormValues) => {
   return (
     <>
       <Toaster position="top-right" />
-
-      {/* ✅ Success Modal */}
       <AnimatePresence>
         {showModal && orderDetails && (
           <motion.div
@@ -186,7 +185,7 @@ const onSubmit = async (data: VoucherFormValues) => {
         )}
       </AnimatePresence>
 
-      {/* 👇 Main Form */}
+      {/* Main Form */}
       <section className="bg-black text-white py-20 px-6 sm:px-12 md:px-20">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -198,9 +197,7 @@ const onSubmit = async (data: VoucherFormValues) => {
             <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center">
               Buy a Voucher
             </h2>
-
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-              {/* Vendor */}
               <div>
                 <label className="block text-sm mb-1">Vendor</label>
                 <select
@@ -225,7 +222,6 @@ const onSubmit = async (data: VoucherFormValues) => {
                 )}
               </div>
 
-              {/* Exam */}
               <div>
                 <label className="block text-sm mb-1">Exam</label>
                 <select
@@ -248,7 +244,6 @@ const onSubmit = async (data: VoucherFormValues) => {
                 )}
               </div>
 
-              {/* Currency */}
               <div>
                 <label className="block text-sm mb-1">Currency</label>
                 <select
@@ -260,7 +255,6 @@ const onSubmit = async (data: VoucherFormValues) => {
                 </select>
               </div>
 
-              {/* Quantity */}
               <div>
                 <label className="block text-sm mb-1">Quantity</label>
                 <input
@@ -276,7 +270,6 @@ const onSubmit = async (data: VoucherFormValues) => {
                 )}
               </div>
 
-              {/* Total */}
               <div className="text-right text-cyan-400 font-bold text-lg">
                 {convertedPrice && (
                   <span>
@@ -289,7 +282,6 @@ const onSubmit = async (data: VoucherFormValues) => {
                 )}
               </div>
 
-              {/* Email */}
               <div>
                 <label className="block text-sm mb-1">Email</label>
                 <input
@@ -304,7 +296,6 @@ const onSubmit = async (data: VoucherFormValues) => {
                 )}
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={isSubmitting}
