@@ -15,10 +15,11 @@ import {
 
 const navItems = [
   { label: "Vouchers", icon: <FaTicketAlt />, href: "/vouchers" },
-  { label: "Training", icon: <FaChalkboardTeacher />, href: "/#training" },
+  { label: "Training", icon: <FaChalkboardTeacher />, href: "/training" },
   { label: "About", icon: <FaInfoCircle />, href: "/about" },
-  { label: "Contact", icon: <FaPhone />, href: "/contact" }, // ✅ updated
+  { label: "Contact", icon: <FaPhone />, href: "/contact" },
 ];
+
 
 
 export default function Navbar() {
