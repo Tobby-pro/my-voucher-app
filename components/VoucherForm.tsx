@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast, { Toaster } from "react-hot-toast";
 
-// ✅ Voucher prop type (updated to include vendor)
 interface Voucher {
   id: string;
   name: string;
@@ -55,8 +54,8 @@ export default function VoucherForm({ voucher = null }: Props) {
   } = useForm<VoucherFormValues>({
     resolver: zodResolver(voucherSchema),
     defaultValues: {
-      vendor: "",
-      exam: "",
+      vendor: voucher?.vendor || "", // ✅ MODIFIED: Set default values from the voucher
+      exam: voucher?.name || "",
       currency: "USD",
       email: "",
       quantity: "1",
@@ -69,13 +68,17 @@ export default function VoucherForm({ voucher = null }: Props) {
   const quantity = parseInt(watch("quantity") || "1", 10);
 
   useEffect(() => {
-    axios
-      .get(`${apiUrl}/vendors-with-exams`, { withCredentials: true })
-      .then((res) => setExamOptions(res.data))
-      .catch(() => toast.error("❌ Failed to fetch vendor exams"));
-  }, []);
+    // ✅ MODIFIED: Only fetch exams if no voucher is passed (for the manual form)
+    if (!voucher) {
+      axios
+        .get(`${apiUrl}/vendors-with-exams`, { withCredentials: true })
+        .then((res) => setExamOptions(res.data))
+        .catch(() => toast.error("❌ Failed to fetch vendor exams"));
+    }
+  }, [voucher]); // Dependency on voucher to re-run if it changes
 
   useEffect(() => {
+    // ✅ MODIFIED: Only fetch price if no voucher is passed and an exam is selected
     if (!exam || voucher) return;
     axios
       .get(`${apiUrl}/voucher-order/voucher-price`, {
@@ -93,14 +96,14 @@ export default function VoucherForm({ voucher = null }: Props) {
     setExchangeRate(currency === "NGN" ? 1520 : 1);
   }, [currency]);
 
-  // ✅ Updated: auto-fill both vendor and exam from the passed voucher
-  useEffect(() => {
-    if (voucher) {
-      setValue("vendor", voucher.vendor);
-      setValue("exam", voucher.name);
-      setBasePrice(voucher.price);
-    }
-  }, [voucher, setValue]);
+  // ✅ MODIFIED: Set default values from the passed voucher. We no longer need this as we've done it in defaultValues.
+  //   useEffect(() => {
+  //     if (voucher) {
+  //       setValue("vendor", voucher.vendor);
+  //       setValue("exam", voucher.name);
+  //       setBasePrice(voucher.price);
+  //     }
+  //   }, [voucher, setValue]);
 
   useEffect(() => {
     if (showModal) {
@@ -117,12 +120,20 @@ export default function VoucherForm({ voucher = null }: Props) {
   const onSubmit = async (data: VoucherFormValues) => {
     setIsSubmitting(true);
     try {
+      // ✅ MODIFIED: Use the passed voucher details if available
+      const submitData = voucher ? {
+        ...data,
+        vendor: voucher.vendor,
+        exam: voucher.name,
+        quantity: parseInt(data.quantity, 10),
+      } : {
+        ...data,
+        quantity: parseInt(data.quantity, 10),
+      };
+
       const response = await axios.post(
         `${apiUrl}/voucher-order`,
-        {
-          ...data,
-          quantity: parseInt(data.quantity, 10),
-        },
+        submitData,
         { withCredentials: true }
       );
 
@@ -198,51 +209,75 @@ export default function VoucherForm({ voucher = null }: Props) {
               Buy a Voucher
             </h2>
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-              <div>
-                <label className="block text-sm mb-1">Vendor</label>
-                <select
-                  {...register("vendor")}
-                  onChange={(e) => {
-                    setValue("vendor", e.target.value);
-                    setValue("exam", "");
-                  }}
-                  className="w-full p-3 rounded bg-white/10 text-white"
-                >
-                  <option value="">Select Vendor</option>
-                  {Object.keys(examOptions).map((v) => (
-                    <option key={v} value={v}>
-                      {v}
-                    </option>
-                  ))}
-                </select>
-                {errors.vendor && (
-                  <p className="text-red-400 text-sm mt-1">
-                    {errors.vendor.message}
-                  </p>
-                )}
-              </div>
 
-              <div>
-                <label className="block text-sm mb-1">Exam</label>
-                <select
-                  {...register("exam")}
-                  disabled={!vendor}
-                  className="w-full p-3 rounded bg-white/10 text-white"
-                >
-                  <option value="">Select Exam</option>
-                  {vendor &&
-                    examOptions[vendor]?.map((exam) => (
-                      <option key={exam} value={exam}>
-                        {exam}
-                      </option>
-                    ))}
-                </select>
-                {errors.exam && (
-                  <p className="text-red-400 text-sm mt-1">
-                    {errors.exam.message}
-                  </p>
-                )}
-              </div>
+              {/* ✅ MODIFIED: Conditional rendering based on the voucher prop */}
+              {voucher ? (
+                // Read-only display for pre-selected voucher
+                <>
+                  <div>
+                    <label className="block text-sm mb-1">Vendor</label>
+                    <div className="w-full p-3 rounded bg-white/20 text-white font-semibold">
+                      {voucher.vendor}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Exam</label>
+                    <div className="w-full p-3 rounded bg-white/20 text-white font-semibold">
+                      {voucher.name}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                // Full form with dropdowns for manual selection
+                <>
+                  <div>
+                    <label className="block text-sm mb-1">Vendor</label>
+                    <select
+                      {...register("vendor")}
+                      onChange={(e) => {
+                        setValue("vendor", e.target.value);
+                        setValue("exam", "");
+                      }}
+                      className="w-full p-3 rounded bg-white/10 text-white"
+                    >
+                      <option value="">Select Vendor</option>
+                      {Object.keys(examOptions).map((v) => (
+                        <option key={v} value={v}>
+                          {v}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.vendor && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.vendor.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm mb-1">Exam</label>
+                    <select
+                      {...register("exam")}
+                      disabled={!vendor}
+                      className="w-full p-3 rounded bg-white/10 text-white"
+                    >
+                      <option value="">Select Exam</option>
+                      {vendor &&
+                        examOptions[vendor]?.map((exam) => (
+                          <option key={exam} value={exam}>
+                            {exam}
+                          </option>
+                        ))}
+                    </select>
+                    {errors.exam && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.exam.message}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
+              {/* End of conditional rendering */}
 
               <div>
                 <label className="block text-sm mb-1">Currency</label>
